@@ -41,7 +41,7 @@ jobs:
       - run:
           name: Prepare task definition
           command: |
-            DEFINITION_FILE="task-definition-${ENV}-${CIRCLE_SHA1::10}.json"
+            DEFINITION_FILE="task-definition.json"
             envsubst < task-definition-${ENV}.json > $DEFINITION_FILE
       - run:
           name: Register new task definition
