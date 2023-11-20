@@ -34,27 +34,27 @@ jobs:
       - run:
           name: Register new task definition
           command: |
-            NEW_TASK_DEF=$(aws ecs register-task-definition --family fintech-centrum --cli-input-json "$(cat <<EOF
+            NEW_TASK_DEF=$(aws ecs register-task-definition --family fintech-centrum --cli-input-json "$(cat \EOF
             {
-              "family": "fintech-centrum",
-              "networkMode": "bridge",
-              "containerDefinitions": [
+              \"family\": \"fintech-centrum\",
+              \"networkMode\": \"bridge\",
+              \"containerDefinitions\": [
                 {
-                  "name": "fintechimage",
-                  "image": "$REPOSITORY_URI:$CIRCLE_SHA1",
-                  "essential": true,
-                  "memory": 256,
-                  "cpu": 256,
-                  "portMappings": [
+                  \"name\": \"fintechimage\",
+                  \"image\": \"$REPOSITORY_URI:$CIRCLE_SHA1\",
+                  \"essential\": true,
+                  \"memory\": 256,
+                  \"cpu\": 256,
+                  \"portMappings\": [
                     {
-                      "containerPort": 8001,
-                      "hostPort": 8001
+                      \"containerPort\": 8001,
+                      \"hostPort\": 1
                     }
                   ]
                 }
               ]
             }
-            EOF
+            \EOF
             )" | jq -r .taskDefinition.taskDefinitionArn)
       - run:
           name: Update ECS service
