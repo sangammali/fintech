@@ -45,7 +45,7 @@ jobs:
           name: Register new task definition
           command: |
             NEW_TASK_DEF=$(aws ecs register-task-definition --cli-input-json file://task-definition.json | jq -r .taskDefinition.taskDefinitionArn)
-            echo $NEW_TASK_DEF
+            echo "New Task Definition ARN: $NEW_TASK_DEF"
       - run:
           name: Update ECS service
           command: aws ecs update-service --cluster $ECS_CLUSTER_NAME --service $ECS_SERVICE_NAME --task-definition $NEW_TASK_DEF
