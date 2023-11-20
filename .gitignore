@@ -1,0 +1,9 @@
+.env
+package-lock.json
+
+# Dependency directories
+node_modules/
+
+# log file path
+log
+log/*
