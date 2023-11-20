@@ -15,11 +15,10 @@
           "containerPort": 8001
         }
       ]
-      // other container definition parameters
     }
   ],
   "placementConstraints": [],
-  "memory": "256",  // This might need adjustment based on your requirements
+  "memory": "256",
   "taskRoleArn": "arn:aws:iam::894185188610:role/ecsTaskExecutionRole",
   "compatibilities": ["EXTERNAL", "EC2"],
   "taskDefinitionArn": "arn:aws:ecs:ap-south-1:894185188610:task-definition/fintech-centrum:3",
@@ -39,7 +38,7 @@
   "requiresCompatibilities": ["EC2"],
   "networkMode": "bridge",
   "runtimePlatform": null,
-  "cpu": "256",  // This might need adjustment based on your requirements
+  "cpu": "256",
   "revision": 3,
   "status": "ACTIVE",
   "inferenceAccelerators": null,
