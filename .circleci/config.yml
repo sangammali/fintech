@@ -22,7 +22,7 @@ jobs:
           name: Build and push Docker image
           command: |
             SHORT_SHA="${CIRCLE_SHA1::10}.${CIRCLE_BRANCH}"
-            eval $(aws ecr get-login --no-include-email --region ap-south-1 | sed 's;https://;;g')
+            aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 894185188610.dkr.ecr.ap-south-1.amazonaws.com
             docker build -t 894185188610.dkr.ecr.ap-south-1.amazonaws.com/new-repo:$SHORT_SHA .
             docker push 894185188610.dkr.ecr.ap-south-1.amazonaws.com/new-repo:$SHORT_SHA
       - run:
