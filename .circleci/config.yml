@@ -50,8 +50,8 @@ jobs:
       - run:
           name: Update ECS service
           command: | 
-                   ECS_CLUSTER_NAME="newcluster"
-                   ECS_SERVICE_NAME="newfintechservice"
+                   echo "export ECS_CLUSTER_NAME=newcluster" >> $BASH_ENV
+                   echo "export ECS_SERVICE_NAME=newfintechservice" >> $BASH_ENV
                    aws ecs run-task --cluster $ECS_CLUSTER_NAME --task-definition $NEW_TASK_DEF --count 1
 
     
