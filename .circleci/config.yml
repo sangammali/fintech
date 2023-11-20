@@ -41,7 +41,7 @@ jobs:
       - run:
           name: Prepare task definition
           command: |
-            envsubst < task-definition.json > task-definition.json
+            sed -i "s|\$REPOSITORY_URI:\$CIRCLE_SHA1|${REPOSITORY_URI}:${CIRCLE_SHA1}|g" task-definition.json
       - run:
           name: Register new task definition
           command: |
