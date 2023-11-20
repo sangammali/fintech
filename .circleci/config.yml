@@ -38,30 +38,9 @@ jobs:
             docker tag $REPOSITORY_URI:$CIRCLE_SHA1 $REPOSITORY_URI:latest
             docker push $REPOSITORY_URI:latest
       - run:
-          name: Register new task definition
-          command: |
-            NEW_TASK_DEF=$(aws ecs register-task-definition --family fintech-centrum --cli-input-json "$(cat <<EOF
-            {
-              "family": "fintech-centrum",
-              "networkMode": "bridge",
-              "containerDefinitions": [
-                {
-                  "name": "fintechimage",
-                  "image": "$REPOSITORY_URI:$CIRCLE_SHA1",
-                  "essential": true,
-                  "memory": 256,
-                  "cpu": 256,
-                  "portMappings": [
-                    {
-                      "containerPort": 8001,
-                      "hostPort": 1
-                    }
-                  ]
-                }
-              ]
-            }
-            EOF
-            )" | jq -r .taskDefinition.taskDefinitionArn)
+         name: Register new task definition
+         command: |
+            NEW_TASK_DEF=$(aws ecs register-task-definition --family fintech-centrum --cli-input-json file://task-definition.json | jq -r .taskDefinition.taskDefinitionArn)
       - run:
           name: Update ECS service
           command: aws ecs update-service --cluster $ECS_CLUSTER_NAME --service $ECS_SERVICE_NAME --task-definition $NEW_TASK_DEF
