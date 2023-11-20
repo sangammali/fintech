@@ -49,10 +49,10 @@ jobs:
             echo "export NEW_TASK_DEF=$NEW_TASK_DEF" >> $BASH_ENV
       - run:
           name: Update ECS service
-          command: NEW_TASK_DEF="fintech-centrum:3"
+          command: | 
                    ECS_CLUSTER_NAME="newcluster"
                    ECS_SERVICE_NAME="newfintechservice"
-                   aws ecs update-service --cluster $ECS_CLUSTER_NAME --service $ECS_SERVICE_NAME --task-definition $NEW_TASK_DEF
+                   aws ecs run-task --cluster $ECS_CLUSTER_NAME --task-definition $NEW_TASK_DEF --count 1
 
     
 workflows:
