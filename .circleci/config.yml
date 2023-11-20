@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: circleci/python:3.7
+      - image: cimg/python:3.7
     environment:
       AWS_DEFAULT_REGION: ap-south-1
       REPOSITORY_URI: 894185188610.dkr.ecr.ap-south-1.amazonaws.com/new-repo
