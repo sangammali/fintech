@@ -3,88 +3,43 @@
   "executionRoleArn": "arn:aws:iam::894185188610:role/ecsTaskExecutionRole",
   "containerDefinitions": [
     {
-      "dnsSearchDomains": null,
-      "environmentFiles": null,
-      "logConfiguration": null,
-      "entryPoint": [],
+      "name": "fintechimage",
+      "image": "894185188610.dkr.ecr.ap-south-1.amazonaws.com/new-repo:bfe48a4c6f672cdd19eefa4715c638e4c66f9b4d",
+      "cpu": 256,
+      "memory": 128,
+      "essential": true,
       "portMappings": [
         {
           "hostPort": 8001,
           "protocol": "tcp",
           "containerPort": 8001
         }
-      ],
-      "command": [],
-      "linuxParameters": null,
-      "cpu": 0,
-      "environment": [],
-      "resourceRequirements": null,
-      "ulimits": null,
-      "dnsServers": null,
-      "mountPoints": [],
-      "workingDirectory": null,
-      "secrets": null,
-      "dockerSecurityOptions": null,
-      "memory": 128,
-      "memoryReservation": null,
-      "volumesFrom": [],
-      "stopTimeout": null,
-      "image": "894185188610.dkr.ecr.ap-south-1.amazonaws.com/new-repo:bfe48a4c6f672cdd19eefa4715c638e4c66f9b4d",
-      "startTimeout": null,
-      "firelensConfiguration": null,
-      "dependsOn": null,
-      "disableNetworking": null,
-      "interactive": null,
-      "healthCheck": null,
-      "essential": true,
-      "links": null,
-      "hostname": null,
-      "extraHosts": null,
-      "pseudoTerminal": null,
-      "user": null,
-      "readonlyRootFilesystem": null,
-      "dockerLabels": null,
-      "systemControls": null,
-      "privileged": null,
-      "name": "fintechimage"
+      ]
+      // other container definition parameters
     }
   ],
   "placementConstraints": [],
-  "memory": "256",
+  "memory": "256",  // This might need adjustment based on your requirements
   "taskRoleArn": "arn:aws:iam::894185188610:role/ecsTaskExecutionRole",
-  "compatibilities": [
-    "EXTERNAL",
-    "EC2"
-  ],
+  "compatibilities": ["EXTERNAL", "EC2"],
   "taskDefinitionArn": "arn:aws:ecs:ap-south-1:894185188610:task-definition/fintech-centrum:3",
   "family": "fintech-centrum",
   "requiresAttributes": [
     {
-      "targetId": null,
-      "targetType": null,
-      "value": null,
       "name": "com.amazonaws.ecs.capability.ecr-auth"
     },
     {
-      "targetId": null,
-      "targetType": null,
-      "value": null,
       "name": "com.amazonaws.ecs.capability.task-iam-role"
     },
     {
-      "targetId": null,
-      "targetType": null,
-      "value": null,
       "name": "ecs.capability.execution-role-ecr-pull"
     }
   ],
   "pidMode": null,
-  "requiresCompatibilities": [
-    "EC2"
-  ],
+  "requiresCompatibilities": ["EC2"],
   "networkMode": "bridge",
   "runtimePlatform": null,
-  "cpu": "256",
+  "cpu": "256",  // This might need adjustment based on your requirements
   "revision": 3,
   "status": "ACTIVE",
   "inferenceAccelerators": null,
