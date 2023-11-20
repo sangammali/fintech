@@ -37,11 +37,15 @@ jobs:
             docker push $REPOSITORY_URI:$CIRCLE_SHA1
             docker tag $REPOSITORY_URI:$CIRCLE_SHA1 $REPOSITORY_URI:latest
             docker push $REPOSITORY_URI:latest
-      - run:
-         name: Register new task definition
-         command: |
-            NEW_TASK_DEF=$(aws ecs register-task-definition --family fintech-centrum --cli-input-json file://task-definition.json | jq -r .taskDefinition.taskDefinitionArn)
-      - run:
+    - run:
+        name: Prepare task definition
+        command: |
+          sed -i "s|\$REPOSITORY_URI:\$CIRCLE_SHA1|$REPOSITORY_URI:$CIRCLE_SHA1|g" task-definition.json
+     - run:
+        name: Register new task definition
+        command: |
+          NEW_TASK_DEF=$(aws ecs register-task-definition --family fintech-centrum --cli-input-json file://task-definition.json | jq -r .taskDefinition.taskDefinitionArn)
+     - run:
           name: Update ECS service
           command: aws ecs update-service --cluster $ECS_CLUSTER_NAME --service $ECS_SERVICE_NAME --task-definition $NEW_TASK_DEF
       - store_artifacts:
