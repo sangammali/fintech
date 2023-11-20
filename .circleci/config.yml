@@ -1,62 +1,42 @@
 version: 2.1
-
-jobs:
-  build:
+executors:
+  python-executor:
     docker:
       - image: cimg/python:3.7
-    environment:
-      AWS_DEFAULT_REGION: ap-south-1
-      REPOSITORY_URI: 894185188610.dkr.ecr.ap-south-1.amazonaws.com/new-repo
-      ECS_CLUSTER_NAME: newcluster
-      ECS_SERVICE_NAME: newfintechservice
-
+        environment:
+          AWS_DEFAULT_REGION: ap-south-1
+          REPOSITORY_URI: 894185188610.dkr.ecr.ap-south-1.amazonaws.com/new-repo
+          ECS_CLUSTER_NAME: newcluster
+          ECS_SERVICE_NAME: newfintechservice
+jobs:
+  build:
+    executor: python-executor
     steps:
       - checkout
+      - setup_remote_docker
       - run:
-          name: Install AWS CLI
-          command: pip install --user awscli
-      - run:
-          name: Configure AWS CLI
+          name: Build and push Docker image
           command: |
-            aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-      - run:
-          name: Copy .env from S3
-          command: aws s3 cp s3://aditya-birla/.env .env
-      - run:
-          name: Login to Amazon ECR
-          command: |
-            aws ecr get-login-password | docker login --username AWS --password-stdin $REPOSITORY_URI
-      - setup_remote_docker:
-          version: 20.10.7
-          docker_layer_caching: true
-      - run:
-          name: Build and Push Docker image
-          command: |
-            SHORT_SHA="${CIRCLE_SHA1::10}.${ENV}"
-            docker build --build-arg elastic_url="${ELASTIC_ENDPOINT}" --build-arg elastic_user="${ELASTIC_USER}"  --build-arg elastic_password="${ELASTIC_PASSWORD}" --build-arg servicelogin_user="${SERVICE_USER}" --build-arg servicelogin_password="${SERVICE_PASSWORD}" --build-arg scala_service_domain="${SCALA_SERVICE_DOMAIN}" --build-arg jwt_secret="${JWT_SECRET}" --build-arg jwt_prefix="${JWT_PREFIX}" --build-arg msite_endpoint="${MSITE_ENDPOINT}" --build-arg swagger_password="${SWAGGER_AUTH_PASSWORD}" --build-arg environment="${ENV}" -t $REPOSITORY_URI:$SHORT_SHA .
-            docker push $REPOSITORY_URI:$SHORT_SHA
-            docker tag $REPOSITORY_URI:$SHORT_SHA $REPOSITORY_URI:latest
-            docker push $REPOSITORY_URI:latest
-      - run:
-          name: Prepare task definition
-          command: |
-            sed -i "s|\$REPOSITORY_URI:\$CIRCLE_SHA1|${REPOSITORY_URI}:${CIRCLE_SHA1}|g" task-definition.json
-      - run:
-          name: Register new task definition
-          command: |
-            export NEW_TASK_DEF=$(aws ecs register-task-definition --family fintech-centrum --cli-input-json file://task-definition.json | jq -r .taskDefinition.taskDefinitionArn)
-            echo "export NEW_TASK_DEF=$NEW_TASK_DEF" >> $BASH_ENV
-      - run:
-          name: Update ECS service
-          command: |
-            echo "export ECS_CLUSTER_NAME=newcluster" >> $BASH_ENV
-            echo "export ECS_SERVICE_NAME=newfintechservice" >> $BASH_ENV
-            aws ecs update-service --cluster $ECS_CLUSTER_NAME --service $ECS_SERVICE_NAME --task-definition $NEW_TASK_DEF
-
-    
+            SHORT_SHA="${CIRCLE_SHA1::10}.${CIRCLE_BRANCH}"
+            aws configure set aws_access_key_id "${AWS_ACCESS_KEY_ID}"
+            aws configure set aws_secret_access_key "${AWS_SECRET_ACCESS_KEY}"
+            eval $(aws ecr get-login --no-include-email --region ${AWS_DEFAULT_REGION} | sed 's;https://;;g')
+            chmod -R o-w .
+            ls -l
+            docker build --build-arg elastic_url="${ELASTIC_ENDPOINT}" --build-arg elastic_user="${ELASTIC_USER}"  --build-arg elastic_password="${ELASTIC_PASSWORD}" --build-arg servicelogin_user="${SERVICE_USER}" --build-arg servicelogin_password="${SERVICE_PASSWORD}" --build-arg scala_service_domain="${SCALA_SERVICE_DOMAIN}" --build-arg jwt_secret="${JWT_SECRET}" --build-arg jwt_prefix="${JWT_PREFIX}" --build-arg msite_endpoint="${MSITE_ENDPOINT}" --build-arg swagger_password="${SWAGGER_AUTH_PASSWORD}" --build-arg environment="${CIRCLE_BRANCH}" -t $ECR_REPOSITORY:$SHORT_SHA . 
+            docker push $ECR_REPOSITORY:$SHORT_SHA
+            export IMAGE_NAME="${ECR_REPOSITORY}:${SHORT_SHA}"
+            DEFINITION_FILE="task-definition-${CIRCLE_BRANCH}-${SHORT_SHA}.json"
+            envsubst < task-definition-${CIRCLE_BRANCH}.json > $DEFINITION_FILE
+            export UPDATED_TASK_DEFINITION=$(aws ecs register-task-definition --cli-input-json file://${DEFINITION_FILE} | jq '.taskDefinition.taskDefinitionArn' --raw-output)
+            aws ecs update-service --service $SERVICE_NAME --cluster $CLUSTER_NAME --task-definition $TASK_NAME
 workflows:
   version: 2
   build-deploy:
     jobs:
-      - build
+      - build:
+          filters:
+            branches:
+              only:
+                - staging
+                - production
