@@ -28,7 +28,9 @@ jobs:
       - run:
           name: Update ECS service
           command: |
-            aws ecs update-service --cluster newcluster --service newfintechservice --task-definition new-task-definition
+            aws ecs register-task-definition --cli-input-json file://task-definition.json
+            aws ecs update-service --cluster newcluster --service newfintechservice --task-definition fintech-centrum:11
+
 workflows:
   version: 2
   build-deploy:
