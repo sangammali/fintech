@@ -1,0 +1,19 @@
+{
+  "family": "fintech-centrum",
+  "networkMode": "bridge",
+  "containerDefinitions": [
+    {
+      "name": "fintechimage",
+      "image": "$REPOSITORY_URI:$CIRCLE_SHA1",
+      "essential": true,
+      "memory": 256,
+      "cpu": 256,
+      "portMappings": [
+        {
+          "containerPort": 8001,
+          "hostPort": 8001
+        }
+      ]
+    }
+  ]
+}
