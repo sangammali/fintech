@@ -33,18 +33,20 @@ jobs:
       - run:
           name: Build and Push Docker image
           command: |
-            docker build --build-arg ENV_FILE=.env -t $REPOSITORY_URI:$CIRCLE_SHA1 .
-            docker push $REPOSITORY_URI:$CIRCLE_SHA1
-            docker tag $REPOSITORY_URI:$CIRCLE_SHA1 $REPOSITORY_URI:latest
+            SHORT_SHA="${CIRCLE_SHA1::10}.${ENV}"
+            docker build --build-arg elastic_url="${ELASTIC_ENDPOINT}" --build-arg elastic_user="${ELASTIC_USER}"  --build-arg elastic_password="${ELASTIC_PASSWORD}" --build-arg servicelogin_user="${SERVICE_USER}" --build-arg servicelogin_password="${SERVICE_PASSWORD}" --build-arg scala_service_domain="${SCALA_SERVICE_DOMAIN}" --build-arg jwt_secret="${JWT_SECRET}" --build-arg jwt_prefix="${JWT_PREFIX}" --build-arg msite_endpoint="${MSITE_ENDPOINT}" --build-arg swagger_password="${SWAGGER_AUTH_PASSWORD}" --build-arg environment="${ENV}" -t $REPOSITORY_URI:$SHORT_SHA .
+            docker push $REPOSITORY_URI:$SHORT_SHA
+            docker tag $REPOSITORY_URI:$SHORT_SHA $REPOSITORY_URI:latest
             docker push $REPOSITORY_URI:latest
       - run:
           name: Prepare task definition
           command: |
-            sed -i "s|\$REPOSITORY_URI:\$CIRCLE_SHA1|$REPOSITORY_URI:$CIRCLE_SHA1|g" task-definition.json
+            DEFINITION_FILE="task-definition-${ENV}-${CIRCLE_SHA1::10}.json"
+            envsubst < task-definition-${ENV}.json > $DEFINITION_FILE
       - run:
           name: Register new task definition
           command: |
-            NEW_TASK_DEF=$(aws ecs register-task-definition --cli-input-json file://task-definition.json | jq -r .taskDefinition.taskDefinitionArn)
+            NEW_TASK_DEF=$(aws ecs register-task-definition --cli-input-json file://$DEFINITION_FILE | jq -r .taskDefinition.taskDefinitionArn)
             echo "New Task Definition ARN: $NEW_TASK_DEF"
       - run:
           name: Update ECS service
