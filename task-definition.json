@@ -1,12 +1,14 @@
 {
-  "ipcMode": null,
+  "family": "fintech-centrum",
+  "taskRoleArn": "arn:aws:iam::894185188610:role/ecsTaskExecutionRole",
   "executionRoleArn": "arn:aws:iam::894185188610:role/ecsTaskExecutionRole",
+  "networkMode": "bridge",
   "containerDefinitions": [
     {
       "name": "fintechimage",
       "image": "894185188610.dkr.ecr.ap-south-1.amazonaws.com/new-repo:bfe48a4c6f672cdd19eefa4715c638e4c66f9b4d",
       "cpu": 256,
-      "memory": 128,
+      "memory": 256,
       "essential": true,
       "portMappings": [
         {
@@ -17,31 +19,7 @@
       ]
     }
   ],
-  "placementConstraints": [],
-  "memory": "256",
-  "taskRoleArn": "arn:aws:iam::894185188610:role/ecsTaskExecutionRole",
-  "compatibilities": ["EXTERNAL", "EC2"],
-  "taskDefinitionArn": "arn:aws:ecs:ap-south-1:894185188610:task-definition/fintech-centrum:3",
-  "family": "fintech-centrum",
-  "requiresAttributes": [
-    {
-      "name": "com.amazonaws.ecs.capability.ecr-auth"
-    },
-    {
-      "name": "com.amazonaws.ecs.capability.task-iam-role"
-    },
-    {
-      "name": "ecs.capability.execution-role-ecr-pull"
-    }
-  ],
-  "pidMode": null,
   "requiresCompatibilities": ["EC2"],
-  "networkMode": "bridge",
-  "runtimePlatform": null,
   "cpu": "256",
-  "revision": 3,
-  "status": "ACTIVE",
-  "inferenceAccelerators": null,
-  "proxyConfiguration": null,
-  "volumes": []
+  "memory": "256"
 }
