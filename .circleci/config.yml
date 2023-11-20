@@ -17,13 +17,16 @@ jobs:
           command: pip install --user awscli
       - run:
           name: Configure AWS CLI
-          command: aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID && aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+          command: |
+            aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
       - run:
           name: Copy .env from S3
           command: aws s3 cp s3://aditya-birla/.env .env
       - run:
           name: Login to Amazon ECR
-          command: aws ecr get-login-password | docker login --username AWS --password-stdin $REPOSITORY_URI
+          command: |
+            aws ecr get-login-password | docker login --username AWS --password-stdin $REPOSITORY_URI
       - setup_remote_docker:
           version: 20.10.7
           docker_layer_caching: true
@@ -38,27 +41,27 @@ jobs:
           name: Register new task definition
           command: |
             NEW_TASK_DEF=$(aws ecs register-task-definition --family fintech-centrum --cli-input-json "$(cat <<EOF
-{
-  \"family\": \"fintech-centrum\",
-  \"networkMode\": \"bridge\",
-  \"containerDefinitions\": [
-    {
-      \"name\": \"fintechimage\",
-      \"image\": \"$REPOSITORY_URI:$CIRCLE_SHA1\",
-      \"essential\": true,
-      \"memory\": 256,
-      \"cpu\": 256,
-      \"portMappings\": [
-        {
-          \"containerPort\": 8001,
-          \"hostPort\": 1
-        }
-      ]
-    }
-  ]
-}
-EOF
-)" | jq -r .taskDefinition.taskDefinitionArn)
+            {
+              "family": "fintech-centrum",
+              "networkMode": "bridge",
+              "containerDefinitions": [
+                {
+                  "name": "fintechimage",
+                  "image": "$REPOSITORY_URI:$CIRCLE_SHA1",
+                  "essential": true,
+                  "memory": 256,
+                  "cpu": 256,
+                  "portMappings": [
+                    {
+                      "containerPort": 8001,
+                      "hostPort": 1
+                    }
+                  ]
+                }
+              ]
+            }
+            EOF
+            )" | jq -r .taskDefinition.taskDefinitionArn)
       - run:
           name: Update ECS service
           command: aws ecs update-service --cluster $ECS_CLUSTER_NAME --service $ECS_SERVICE_NAME --task-definition $NEW_TASK_DEF
