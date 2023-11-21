@@ -1,5 +1,5 @@
 {
-  "family": "new-fintech",
+  "family": "newtd",
   "taskRoleArn": "arn:aws:iam::894185188610:role/ecsTaskExecutionRole",
   "executionRoleArn": "arn:aws:iam::894185188610:role/ecsTaskExecutionRole",
   "networkMode": "bridge",
@@ -7,19 +7,19 @@
     {
       "name": "fontech",
       "image": "894185188610.dkr.ecr.ap-south-1.amazonaws.com/new-repo:latest",
-      "cpu": 512,
-      "memory": 512,
+      "cpu": 256,
+      "memory": 256,
       "essential": true,
       "portMappings": [
         {
-          "hostPort": 8001,
+          "hostPort": 4000,
           "protocol": "tcp",
-          "containerPort": 8001
+          "containerPort": 4000
         }
       ]
     }
   ],
   "requiresCompatibilities": ["EC2"],
-  "cpu": "512",
-  "memory": "512"
+  "cpu": "256",
+  "memory": "256"
 }
