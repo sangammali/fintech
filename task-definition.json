@@ -5,7 +5,7 @@
   "networkMode": "bridge",
   "containerDefinitions": [
     {
-      "name": "fontech",
+      "name": "new",
       "image": "894185188610.dkr.ecr.ap-south-1.amazonaws.com/new-repo:latest",
       "cpu": 256,
       "memory": 256,
