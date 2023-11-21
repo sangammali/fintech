@@ -6,7 +6,7 @@
   "containerDefinitions": [
     {
       "name": "fintechimage",
-      "image": "894185188610.dkr.ecr.ap-south-1.amazonaws.com/new-repo:bfe48a4c6f672cdd19eefa4715c638e4c66f9b4d",
+      "image": "894185188610.dkr.ecr.ap-south-1.amazonaws.com/new-repo:${SHORT_SHA}",
       "cpu": 256,
       "memory": 256,
       "essential": true,
