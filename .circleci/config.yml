@@ -19,6 +19,9 @@ jobs:
             aws configure set aws_secret_access_key "${AWS_SECRET_ACCESS_KEY}"
             aws configure set default.region ap-south-1
       - run:
+          name: Copy .env from S3
+          command: aws s3 cp s3://aditya-birla/.env .env
+      - run:
           name: Build and push Docker image
           command: |
             SHORT_SHA="${CIRCLE_SHA1::10}.${CIRCLE_BRANCH}"
