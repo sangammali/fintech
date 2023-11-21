@@ -1,14 +1,14 @@
 {
-  "family": "fintech-centrum",
+  "family": "new-fintech",
   "taskRoleArn": "arn:aws:iam::894185188610:role/ecsTaskExecutionRole",
   "executionRoleArn": "arn:aws:iam::894185188610:role/ecsTaskExecutionRole",
   "networkMode": "bridge",
   "containerDefinitions": [
     {
-      "name": "fintechimage",
+      "name": "fontech",
       "image": "894185188610.dkr.ecr.ap-south-1.amazonaws.com/new-repo:latest",
       "cpu": 256,
-      "memory": 256,
+      "memory": 512,
       "essential": true,
       "portMappings": [
         {
