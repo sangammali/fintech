@@ -22,6 +22,8 @@ jobs:
           name: Copy .env from S3
           command: |
             aws s3 cp s3://aditya-birla/.env .env || echo "Failed to copy .env file from S3" && echo ".env file copied successfully from S3"
+            ls -al
+            ls -al /path/to
       - run:
           name: Build and push Docker image
           command: |
