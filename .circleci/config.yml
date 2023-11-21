@@ -32,8 +32,8 @@ jobs:
       - run:
           name: Update ECS service
           command: |
-            ECS_CLUSTER_NAME=cluster-newfin
-            ECS_SERVICE_NAME=service-newservice2
+            ECS_CLUSTER_NAME=newfin
+            ECS_SERVICE_NAME=newservice2
             NEW_TASK_DEF_ARN=$(aws ecs register-task-definition --family new-fintech --cli-input-json file://task-definition.json | jq -r .taskDefinition.taskDefinitionArn)
             aws ecs update-service --cluster $ECS_CLUSTER_NAME --service $ECS_SERVICE_NAME --task-definition $NEW_TASK_DEF_ARN
             echo "New Task Definition ARN: $NEW_TASK_DEF_ARN"
