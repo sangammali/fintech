@@ -28,14 +28,7 @@ jobs:
             aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 894185188610.dkr.ecr.ap-south-1.amazonaws.com
             docker build -t 894185188610.dkr.ecr.ap-south-1.amazonaws.com/new-repo:latest .
             docker push 894185188610.dkr.ecr.ap-south-1.amazonaws.com/new-repo:latest
-      - run:
-          name: Update ECS service
-          command: |
-            ECS_CLUSTER_NAME=newcluster
-            ECS_SERVICE_NAME=new-service
-            NEW_TASK_DEF_ARN=$(aws ecs register-task-definition --family new-fintech --cli-input-json file://task-definition.json | jq -r .taskDefinition.taskDefinitionArn)
-            aws ecs update-service --cluster $ECS_CLUSTER_NAME --service $ECS_SERVICE_NAME --task-definition $NEW_TASK_DEF_ARN
-            echo "New Task Definition ARN: $NEW_TASK_DEF_ARN"
+
 workflows:
   version: 2
   build-deploy:
