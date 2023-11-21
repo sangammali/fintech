@@ -7,7 +7,7 @@
     {
       "name": "fontech",
       "image": "894185188610.dkr.ecr.ap-south-1.amazonaws.com/new-repo:latest",
-      "cpu": 256,
+      "cpu": 512,
       "memory": 512,
       "essential": true,
       "portMappings": [
@@ -20,6 +20,6 @@
     }
   ],
   "requiresCompatibilities": ["EC2"],
-  "cpu": "256",
+  "cpu": "512",
   "memory": "512"
 }
